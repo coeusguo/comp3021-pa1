@@ -1,0 +1,7 @@
+
+public class Wall extends Location{
+	public Wall(int row,int column){
+		super(row,column);
+	}
+
+}

@@ -1,5 +1,5 @@
 
-public class Location {
+public class Location implements Cloneable{
 	private int row;
 	private int column;
 	
@@ -19,6 +19,19 @@ public class Location {
 	
 	public int getColumn(){
 		return column;
+	}
+	
+	public void setLocation(Location location){
+		this.row = location.row;
+		this.column = location.column;
+	}
+	
+	public void setRow(int x){
+		this.row = x;
+	}
+	
+	public void setColumn(int y){
+		this.column = y;
 	}
 	
 	@Override
@@ -48,5 +61,9 @@ public class Location {
 
 	public String toString(){
 		return "<" + row + "," + column + ">"; 
+	}
+	
+	public Location clone() throws CloneNotSupportedException{
+		return (Location)super.clone();
 	}
 }
