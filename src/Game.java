@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileReader;
 import java.io.BufferedReader;
 
 public class Game {
@@ -12,11 +13,11 @@ public class Game {
 		int N = Integer.parseInt(line.split(" ")[1]);
 		
 		// To do: define a map
-		
+		char[][]  map = new char[M][N];
 		// Read the following M lines of the Map
 		for (int i = 0; i < M; i++) {
 			line = br.readLine();
-			
+			map[i] = line.toCharArray();
 			// to do
 			// Read the map line by line
 		}
