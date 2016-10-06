@@ -1,8 +1,14 @@
 import java.io.File;
 import java.io.FileReader;
 import java.io.BufferedReader;
+import java.util.HashMap;
+import java.util.HashMap;
 
 public class Game {
+	private Map map = null;
+	private Player player= null;
+	private HashMap<Location,Pokemon> pokemons = null;
+	private HashMap<Location,Station> stations = null;
 	
 	public void initialize(File inputFile) throws Exception{
 		BufferedReader br = new BufferedReader(new FileReader(inputFile));
@@ -17,10 +23,11 @@ public class Game {
 		// Read the following M lines of the Map
 		for (int i = 0; i < M; i++) {
 			line = br.readLine();
-			map[i] = line.toCharArray();
-			// to do
+			for(int j = 0;j < N; j++)
+				map[i][j] = line.charAt(j);
 			// Read the map line by line
 		}
+		
 		
 		// to do
 		// Find the number of stations and pokemons in the map 

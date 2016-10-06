@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class Player {
-	private static int maxScore = 0;
+	public static int maxScore = 0;
 	
 	private HashMap<Location,Pokemon> pokemonCaught = null;
 	private HashMap<Location,Station> stationVisited = null;
