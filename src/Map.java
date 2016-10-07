@@ -1,7 +1,8 @@
 import java.util.ArrayList;
 
 public class Map {
-	private String[][] map = null;
+	//
+	private Location[][] map = null;
 	//max row and column of the map
 	private int max_row;
 	private int max_column;
@@ -12,7 +13,7 @@ public class Map {
 	public Map(int max_row,int max_column){
 		this.max_column = max_column;
 		this.max_row = max_row;
-		map = new String[max_row][max_column];
+		map = new Location[max_row][max_column];
 		pokemons = new ArrayList<>();
 		stations = new ArrayList<>();
 	}
@@ -33,11 +34,11 @@ public class Map {
 		return stations;
 	}
 	
-	public void setMap(String[][] map){
+	public void setMap(Location[][] map){
 		this.map = map;
 	}
 	
-	public void setMapElement(String element,int row,int column){
+	public void setMapElement(Location element,int row,int column){
 		map[row][column] = element;
 	}
 	
