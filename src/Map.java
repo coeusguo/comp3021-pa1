@@ -3,6 +3,7 @@ import java.util.ArrayList;
 public class Map {
 	//
 	private Location[][] map = null;
+	private Location start = null;
 	//max row and column of the map
 	private int max_row;
 	private int max_column;
@@ -38,8 +39,8 @@ public class Map {
 		this.map = map;
 	}
 	
-	public void setMapElement(Location element,int row,int column){
-		map[row][column] = element;
+	public void setMapElement(Location element){
+		map[element.getRow()][element.getColumn()] = element;
 	}
 	
 	public int getMaxRow(){
@@ -49,4 +50,6 @@ public class Map {
 	public int getMaxColumn(){
 		return this.max_column;
 	}
+	
+	
 }

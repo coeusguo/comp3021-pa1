@@ -8,8 +8,9 @@ public class Player {
 	private HashSet<String> caughtTypes = null;
 	
 	private Location currentLocation = null;
+	private int maxCombatPowerCaught = 0;
 	
-	LinkedList<String> pathVisited = null;
+	LinkedList<Location> pathVisited = null;
 	
 	private int numPokeBalls;
 	
@@ -30,7 +31,13 @@ public class Player {
 		return numPokeBalls + 5*pokemonCaught.size()+10*caughtTypes.size() + maxCombatPower - pathVisited.size();
 	}
 	
+	public int getMaxCombatPower(){
+		return this.maxCombatPowerCaught;
+	}
 	
+	public void setMaxCombatPower(int a){
+		this.maxCombatPowerCaught = a;
+	}
 	
 	
 	@SuppressWarnings("unchecked")
@@ -39,7 +46,7 @@ public class Player {
 		this.stationVisited = (HashMap<Location,Station>)player.stationVisited.clone();
 		this.caughtTypes = (HashSet<String>)player.caughtTypes.clone();
 		this.currentLocation = (Location)player.currentLocation.clone();
-		this.pathVisited = (LinkedList<String>)player.pathVisited;
+		this.pathVisited = (LinkedList<Location>)player.pathVisited;
 		this.numPokeBalls = player.numPokeBalls;
 		
 	}
@@ -60,7 +67,7 @@ public class Player {
 		return currentLocation;
 	}
 	
-	public LinkedList<String> getPathVisited(){
+	public LinkedList<Location> getPathVisited(){
 		return pathVisited;
 	}
 	
