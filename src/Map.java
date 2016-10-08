@@ -35,8 +35,12 @@ public class Map {
 		return stations;
 	}
 	
-	public void setMap(Location[][] map){
-		this.map = map;
+	public void setStartLocation(Location start){
+		this.start = start;
+	}
+	
+	public Location getStartLocation(){
+		return this.start;
 	}
 	
 	public void setMapElement(Location element){
