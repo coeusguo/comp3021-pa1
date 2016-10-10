@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class Player {
-	public static int maxScore = 0;
+	public static int maxScore = -100000000;
 	
 	private HashMap<Location,Pokemon> pokemonCaught = null;
 	private HashMap<Location,Station> stationVisited = null;
@@ -14,6 +14,13 @@ public class Player {
 	
 	private int numPokeBalls;
 	
+	public Player(){
+		pokemonCaught = new HashMap<>();
+		stationVisited = new HashMap<>();
+		caughtTypes = new HashSet<>();
+		currentLocation = new Location(-1,-1);
+		pathVisited = new LinkedList<>();
+	}
 	public Player(HashMap<Location,Pokemon> pokemonCaught,HashMap<Location,Station> stationVisited,HashSet<String> caughtTypes,Location currentLocation,int numPokeBalls){
 		this.pokemonCaught = pokemonCaught;
 		this.stationVisited = stationVisited;
@@ -23,12 +30,7 @@ public class Player {
 	}
 	
 	public int calculateScore(){
-		int maxCombatPower = 0;
-		for(Pokemon p:pokemonCaught.values()){
-			if(p.getCombatPower()>maxCombatPower)
-				maxCombatPower = p.getCombatPower();
-		}
-		return numPokeBalls + 5*pokemonCaught.size()+10*caughtTypes.size() + maxCombatPower - pathVisited.size();
+		return numPokeBalls + 5*pokemonCaught.size()+10*caughtTypes.size() + maxCombatPowerCaught - pathVisited.size()+1;
 	}
 	
 	public int getMaxCombatPower(){
@@ -40,15 +42,18 @@ public class Player {
 	}
 	
 	
-	@SuppressWarnings("unchecked")
 	public Player(Player player)throws Exception{
-		this.pokemonCaught = (HashMap<Location,Pokemon>)player.pokemonCaught.clone();
-		this.stationVisited = (HashMap<Location,Station>)player.stationVisited.clone();
-		this.caughtTypes = (HashSet<String>)player.caughtTypes.clone();
-		this.currentLocation = (Location)player.currentLocation.clone();
-		this.pathVisited = (LinkedList<Location>)player.pathVisited;
+		this.pokemonCaught = new HashMap<>();
+		this.pokemonCaught.putAll(player.pokemonCaught);
+		this.stationVisited = new HashMap<>();
+		this.stationVisited.putAll(player.stationVisited);
+		this.caughtTypes = new HashSet<>();
+		this.caughtTypes.addAll(player.caughtTypes);
+		this.currentLocation = new Location(player.currentLocation);
+		this.pathVisited = new LinkedList<>();
+		this.pathVisited.addAll(player.pathVisited);
 		this.numPokeBalls = player.numPokeBalls;
-		
+		this.maxCombatPowerCaught = player.maxCombatPowerCaught;
 	}
 	
 	public HashMap<Location,Pokemon> getPokemonCaught(){
@@ -67,6 +72,10 @@ public class Player {
 		return currentLocation;
 	}
 	
+	public void setCurrentLocation(Location currentLocation){
+		this.currentLocation = currentLocation;
+	}
+	
 	public LinkedList<Location> getPathVisited(){
 		return pathVisited;
 	}
@@ -77,5 +86,17 @@ public class Player {
 	
 	public void setNumPokeBalls(int num){
 		this.numPokeBalls = num;
+	}
+	
+	public boolean hasCaught(Pokemon pokemon){
+		if(pokemonCaught.containsKey(pokemon.getLocation()))
+			return true;
+		return false;
+	}
+	
+	public boolean hasVisited(Station station){
+		if(stationVisited.containsKey(station.getLocation()))
+			return true;
+		return false;
 	}
 }

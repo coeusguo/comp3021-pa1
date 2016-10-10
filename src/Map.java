@@ -47,13 +47,14 @@ public class Map {
 		map[element.getRow()][element.getColumn()] = element;
 	}
 	
-	public int getMaxRow(){
-		return this.max_row;
+	public boolean isOutOfBound(int row,int column){
+		if(row < 0 || column < 0 || row >= this.max_row || column >= this.max_column)
+			return true;
+		return false;	
 	}
 	
-	public int getMaxColumn(){
-		return this.max_column;
+	public Location getMapElement(int row, int column){
+		return map[row][column];
 	}
-	
 	
 }

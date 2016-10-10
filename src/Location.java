@@ -1,5 +1,5 @@
 
-public class Location implements Cloneable{
+public class Location{
 	private int row;
 	private int column;
 	
