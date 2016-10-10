@@ -105,7 +105,7 @@ public class Game {
 	
 	private void outputResult(Player player)throws Exception{
 		try(PrintWriter output = new PrintWriter(outputFile)){
-			System.out.println("OK");
+			System.out.println("output file updated!");
 			output.println(Player.maxScore);
 			output.println(player.getNumPokeBalls() + ":" + player.getPokemonCaught().size() + ":" + player.getTypeCaught().size() + ":" + player.getMaxCombatPower());
 			Iterator<Location> ite =player.getPathVisited().listIterator();
@@ -233,6 +233,7 @@ public class Game {
 		
 		game.findPath();
 		
+		System.out.println("done!");
 		// TO DO 
 		// Read the configures of the map and pokemons from the file inputFile
 		// and output the results to the file outputFile

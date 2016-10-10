@@ -1,3 +1,9 @@
+/*
+This class is used to store the location information(i.e. the row and column index) of the element in
+the map.
+e.g. the row and column index of the pokemon of in the map 
+  
+ */
 
 public class Location{
 	private int row;
@@ -21,19 +27,8 @@ public class Location{
 		return column;
 	}
 	
-	public void setLocation(Location location){
-		this.row = location.row;
-		this.column = location.column;
-	}
 	
-	public void setRow(int x){
-		this.row = x;
-	}
-	
-	public void setColumn(int y){
-		this.column = y;
-	}
-	
+	//hashcode() is used to set up hash map of pokemons and stations
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -58,12 +53,11 @@ public class Location{
 			return false;
 		return true;
 	}
-
+	
+	
+	//used to print path to the output file with format:<row,column>
 	public String toString(){
 		return "<" + row + "," + column + ">"; 
 	}
-	
-	public Location clone() throws CloneNotSupportedException{
-		return (Location)super.clone();
-	}
+
 }
