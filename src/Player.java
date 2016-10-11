@@ -1,15 +1,22 @@
 import java.util.*;
 
 public class Player {
+	//used to store the current max score of each game
 	public static int maxScore = -100000000;
 	
+	//used to store the caught pokemons and visited stations
+	//get element from hash map and hash set is O(1),can increase performance 
 	private HashMap<Location,Pokemon> pokemonCaught = null;
 	private HashMap<Location,Station> stationVisited = null;
+	//store distinct types of pokemons caught
 	private HashSet<String> caughtTypes = null;
 	
 	private Location currentLocation = null;
+	
+	//record the current max combat power of all the pokemon caught
 	private int maxCombatPowerCaught = 0;
 	
+	//store the path visited
 	LinkedList<Location> pathVisited = null;
 	
 	private int numPokeBalls;
@@ -21,26 +28,6 @@ public class Player {
 		currentLocation = new Location(-1,-1);
 		pathVisited = new LinkedList<>();
 	}
-	public Player(HashMap<Location,Pokemon> pokemonCaught,HashMap<Location,Station> stationVisited,HashSet<String> caughtTypes,Location currentLocation,int numPokeBalls){
-		this.pokemonCaught = pokemonCaught;
-		this.stationVisited = stationVisited;
-		this.caughtTypes = caughtTypes;
-		this.currentLocation = currentLocation;
-		this.numPokeBalls = numPokeBalls;
-	}
-	
-	public int calculateScore(){
-		return numPokeBalls + 5*pokemonCaught.size()+10*caughtTypes.size() + maxCombatPowerCaught - pathVisited.size()+1;
-	}
-	
-	public int getMaxCombatPower(){
-		return this.maxCombatPowerCaught;
-	}
-	
-	public void setMaxCombatPower(int a){
-		this.maxCombatPowerCaught = a;
-	}
-	
 	
 	public Player(Player player)throws Exception{
 		this.pokemonCaught = new HashMap<>();
@@ -55,6 +42,21 @@ public class Player {
 		this.numPokeBalls = player.numPokeBalls;
 		this.maxCombatPowerCaught = player.maxCombatPowerCaught;
 	}
+	
+	//calculate the score of the player according to the formula
+	public int calculateScore(){
+		return numPokeBalls + 5*pokemonCaught.size()+10*caughtTypes.size() + maxCombatPowerCaught - pathVisited.size()+1;
+	}
+	
+	public int getMaxCombatPower(){
+		return this.maxCombatPowerCaught;
+	}
+	public void setMaxCombatPower(int a){
+		this.maxCombatPowerCaught = a;
+	}
+	
+	
+
 	
 	public HashMap<Location,Pokemon> getPokemonCaught(){
 		return this.pokemonCaught;
@@ -88,12 +90,13 @@ public class Player {
 		this.numPokeBalls = num;
 	}
 	
+	//check whether a given pokemon is caught
 	public boolean hasCaught(Pokemon pokemon){
 		if(pokemonCaught.containsKey(pokemon.getLocation()))
 			return true;
 		return false;
 	}
-	
+	//check whether a given supply station is visited
 	public boolean hasVisited(Station station){
 		if(stationVisited.containsKey(station.getLocation()))
 			return true;

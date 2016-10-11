@@ -1,4 +1,8 @@
-
+/*
+ Used to represent station/
+ 
+The same reason as Pokemon class that to be defined under Location class
+ */
 public class Station extends Location{
 	private int numBalls;
 	
