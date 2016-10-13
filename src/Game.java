@@ -13,10 +13,9 @@ public class Game {
 
 	
 	
-	public Game(String inputFile,String outputFile,Player player)throws Exception{
+	public Game(String inputFile,String outputFile)throws Exception{
 			this.inputFile = new File(inputFile);
 			this.outputFile = new File(outputFile);
-			this.player = new Player(player);
 			//initialize the map
 			initialize();
 	}
@@ -29,6 +28,8 @@ public class Game {
 		int M = Integer.parseInt(line.split(" ")[0]);
 		int N = Integer.parseInt(line.split(" ")[1]);
 		
+		//initialize the player
+		this.player = new Player(M,N);
 		// define the map
 		this.map = new Map(M,N);
 		
@@ -127,12 +128,12 @@ public class Game {
 	
 	//call findPath method
 	public void findPath()throws Exception{
-		findPath(player,1,"null");
+		findPath(player,1);
 		//1 means start from recursion level 1
 		//will explain "null" later
 	}
 	
-	private void findPath(Player player,int level,String comeFrom)throws Exception{
+	private void findPath(Player player,int level)throws Exception{
 		Location currentLocation = player.getCurrentLocation();
 		int currentRow = currentLocation.getRow();
 		int currentColumn = currentLocation.getColumn();
@@ -141,19 +142,10 @@ public class Game {
 		if(this.map.isOutOfBound(currentRow, currentColumn))
 			return;
 		
+		
 		//add current location to the visited path of the player
 		Location element = this.map.getMapElement(currentRow, currentColumn);
 		player.getPathVisited().add(player.getCurrentLocation());
-		
-		//check whether player reach destination
-		if(element instanceof Destination){
-			if(player.calculateScore()>Player.maxScore){
-				Player.maxScore = player.calculateScore();
-				//if current solution generate a higher score than current max score,output the new result
-				outputResult(player);
-			}
-			return;
-		}
 		
 		/*
 		 The recursion level don`t need to continue to deeper than 200 levels.According to the assignment description,
@@ -169,8 +161,19 @@ public class Game {
 			return;
 		}	
 		
-		//use a new player to update new information 
-		Player playerUpdate = new Player(player);
+		//add current location to the visited list
+		player.getHasCome().add(currentLocation);
+		
+		//check whether player reach destination
+		if(element instanceof Destination){
+			if(player.calculateScore()>Player.maxScore){
+				Player.maxScore = player.calculateScore();
+				//if current solution generate a higher score than current max score,output the new result
+				outputResult(player);
+			}
+			return;
+		}
+		
 		
 		/*
 		 Algorithm:
@@ -178,32 +181,31 @@ public class Game {
 		 the 'refresh' variable is a indicator to indicate whether a new pokemon caught or new station visited
 		 in current location
 		 */
-		boolean refresh =false;
 		if(element instanceof Station){
 			Station station = (Station)element;
 			//check whether current station is visited
-			if(!playerUpdate.hasVisited(station)){
+			if(!player.hasVisited(station)){
 				//update player`s pokeballs and visit list of station
-				playerUpdate.getStationVisited().put(station.getLocation(), station);
-				playerUpdate.setNumPokeBalls(playerUpdate.getNumPokeBalls()+station.getNumBalls());
-				//visit new station,indicator = true
-				refresh = true;
+				player.getStationVisited().put(station.getLocation(), station);
+				player.setNumPokeBalls(player.getNumPokeBalls()+station.getNumBalls());
+				//reset the visited list,which means player can go to the place that has visited before
+				player.getHasCome().clear();
 			}
 		}
 		
 		if(element instanceof Pokemon){
 			Pokemon pokemon = (Pokemon)element;
 			//check whether current pokemon is caught
-			if(!playerUpdate.hasCaught(pokemon)){
+			if(!player.hasCaught(pokemon)){
 				//check whether player has enough pokeballs to catch this pokemon
-				if(playerUpdate.getNumPokeBalls() >= pokemon.getNumRequiredBalls()){
-					playerUpdate.getPokemonCaught().put(pokemon.getLocation(), pokemon);
-					playerUpdate.setNumPokeBalls(player.getNumPokeBalls()-pokemon.getNumRequiredBalls());
-					playerUpdate.getTypeCaught().add(pokemon.getType());
-					if(pokemon.getCombatPower() > playerUpdate.getMaxCombatPower())
-						playerUpdate.setMaxCombatPower(pokemon.getCombatPower());
-					//catch new pokemon,indicator = true
-					refresh = true;
+				if(player.getNumPokeBalls() >= pokemon.getNumRequiredBalls()){
+					player.getPokemonCaught().put(pokemon.getLocation(), pokemon);
+					player.setNumPokeBalls(player.getNumPokeBalls()-pokemon.getNumRequiredBalls());
+					player.getTypeCaught().add(pokemon.getType());
+					if(pokemon.getCombatPower() > player.getMaxCombatPower())
+						player.setMaxCombatPower(pokemon.getCombatPower());
+					//reset the visited list,which means player can go to the place that has visited before
+					player.getHasCome().clear();
 				}
 			}
 		}
@@ -214,37 +216,41 @@ public class Game {
 		 */
 		level++;
 				
-		//if player comes from left side,the no need to go back to left side
-		if(!comeFrom.equals("left")||refresh){
-			Location newLocation = new Location(currentRow,currentColumn-1);
-			Player player1 = new Player(playerUpdate);
-			player1.setCurrentLocation(newLocation);
-			findPath(player1,level,"right");
+		
+		Location newLocationLeft = new Location(currentRow,currentColumn-1);
+		//check whether the player has visited the left side
+		if(!player.getHasCome().contains(newLocationLeft)){
+			Player player1 = new Player(player);
+			player1.setCurrentLocation(newLocationLeft);
+			findPath(player1,level);
 		}
 		
-		//if player comes from up side,the no need to go back to up side
-		if(!comeFrom.equals("up")||refresh){
-			Location newLocation = new Location(currentRow-1,currentColumn);
-			Player player2 = new Player(playerUpdate);
-			player2.setCurrentLocation(newLocation);
-			findPath(player2,level,"down");
+		
+		Location newLocationUp = new Location(currentRow-1,currentColumn);
+		//check whether the player has visited the up side
+		if(!player.getHasCome().contains(newLocationUp)){
+			Player player2 = new Player(player);
+			player2.setCurrentLocation(newLocationUp);
+			findPath(player2,level);
 		}
 		
-		//if player comes from right side,the no need to go back to right side
-		if((!comeFrom.equals("right"))|| refresh){
-			Location newLocation = new Location(currentRow,currentColumn+1);
-			Player player3 = new Player(playerUpdate);
-			player3.setCurrentLocation(newLocation);
-			findPath(player3,level,"left");
+		
+		Location newLocationRight = new Location(currentRow,currentColumn+1);
+		//check whether the player has visited the right side
+		if(!player.getHasCome().contains(newLocationRight)){
+			Player player3 = new Player(player);
+			player3.setCurrentLocation(newLocationRight);
+			findPath(player3,level);
 			
 		}
 		
-		//if player comes from down side,the no need to go back to down side
-		if((!comeFrom.contentEquals("down"))|| refresh){
-			Location newLocation = new Location(currentRow+1,currentColumn);
-			Player player4 = new Player(playerUpdate);
-			player4.setCurrentLocation(newLocation);
-			findPath(player4,level,"up");
+		
+		Location newLocationDown = new Location(currentRow+1,currentColumn);
+		//check whether the player has visited the down side
+		if(!player.getHasCome().contains(newLocationDown)){
+			Player player4 = new Player(player);
+			player4.setCurrentLocation(newLocationDown);
+			findPath(player4,level);
 		}
 		
 		//if refresh = true,the player has caught a new pokemon or visited a new station in current location
@@ -266,7 +272,7 @@ public class Game {
 
 	
 	public static void main(String[] args) throws Exception{
-		Game game = new Game("./sampleIn.txt","./sampleOut.txt",new Player());
+		Game game = new Game("./sampleIn.txt","./sampleOut.txt");
 		if (args.length > 0) 
 			game.setInputFile(args[0]);
 	

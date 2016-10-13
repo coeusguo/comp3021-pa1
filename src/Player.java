@@ -21,12 +21,16 @@ public class Player {
 	
 	private int numPokeBalls;
 	
-	public Player(){
+	//store the number of times that each cell in the map has been visited
+	HashSet<Location> hasCome= null;
+	
+	public Player(int M,int N){
 		pokemonCaught = new HashMap<>();
 		stationVisited = new HashMap<>();
 		caughtTypes = new HashSet<>();
 		currentLocation = new Location(-1,-1);
 		pathVisited = new LinkedList<>();
+		hasCome = new HashSet<>();;
 	}
 	
 	public Player(Player player)throws Exception{
@@ -41,6 +45,9 @@ public class Player {
 		this.pathVisited.addAll(player.pathVisited);
 		this.numPokeBalls = player.numPokeBalls;
 		this.maxCombatPowerCaught = player.maxCombatPowerCaught;
+		this.hasCome = new HashSet<>();
+		this.hasCome.addAll(player.hasCome);
+		
 	}
 	
 	//calculate the score of the player according to the formula
@@ -55,7 +62,9 @@ public class Player {
 		this.maxCombatPowerCaught = a;
 	}
 	
-	
+	public HashSet<Location> getHasCome(){
+		return this.hasCome;
+	}
 
 	
 	public HashMap<Location,Pokemon> getPokemonCaught(){
